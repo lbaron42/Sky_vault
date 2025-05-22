@@ -1,0 +1,402 @@
+<div class="modal-container">
+  <div class="header-flex">
+    <div class="header-center-group">
+      <h1 class="title">
+        {{ "AIRCRAFT.TITLE" | translate }}
+        <span class="year">{{ currentYear }}</span>
+        <span class="reg-chip">{{ aircraftRegistration }}</span>
+      </h1>
+      <img
+        class="header-aircraft-img"
+        [src]="image_url || '/images/aircraftImages/helicopter.png'"
+        alt="Aircraft Image"
+      />
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="action-button">
+      <button
+        class="add-flight-btn bg-gradient-to-r from-blue-500 to-blue-700"
+        (click)="openAddFlightModal()"
+      >
+        {{ "AIRCRAFT.ADD_FLIGHT" | translate }}
+        <svg class="metal-icon" width="22" height="22" viewBox="0 0 24 24">
+          <defs>
+            <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#d9d9d9" />
+              <stop offset="50%" stop-color="#a6a6a6" />
+              <stop offset="100%" stop-color="#7d7d7d" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M12 5v14m-7-7h14"
+            stroke="url(#metal)"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button
+        class="add-expenses-btn bg-gradient-to-r from-gray-400 to-gray-600"
+        (click)="openExpensesModal()"
+      >
+        {{ "AIRCRAFT.ADD_EXPENSE" | translate }}
+        <svg class="metal-icon" width="22" height="22" viewBox="0 0 24 24">
+          <defs>
+            <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#d9d9d9" />
+              <stop offset="50%" stop-color="#a6a6a6" />
+              <stop offset="100%" stop-color="#7d7d7d" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M12 5v14m-7-7h14"
+            stroke="url(#metal)"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <div class="flex items-center gap-3 ml-4">
+        <!-- Number of Expenses -->
+        <div
+          class="flex items-center px-4 py-2 rounded-lg bg-gradient-to-br from-blue-700 to-blue-500 shadow-md text-white font-bold text-base border border-blue-900"
+        >
+          <svg
+            class="w-5 h-5 mr-2 opacity-80"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>{{ expensesCount }}</span>
+        </div>
+        <!-- Total Value -->
+        <div
+          class="flex items-center px-5 py-2 rounded-lg bg-gradient-to-br from-gray-700 via-blue-800 to-blue-500 shadow-md text-white font-bold text-base border border-blue-900"
+        >
+          <svg
+            class="w-5 h-5 mr-2 opacity-80"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 8c-2.21 0-4-1.79-4-4h2a2 2 0 1 0 4 0h2c0 2.21-1.79 4-4 4z"
+            />
+            <circle cx="12" cy="12" r="10" />
+          </svg>
+          <span
+            >Value:
+            <span class="font-extrabold">{{
+              expensesTotal | number : "1.2-2"
+            }}</span></span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="hours-summary">
+      <h2>{{ "AIRCRAFT.HOURS_SUMMARY" | translate }}</h2>
+      <div class="table-clip">
+        <div class="table-scroll">
+          <table class="hours-table">
+            <thead>
+              <tr class="summary-header">
+                <th>{{ "AIRCRAFT.TYPE" | translate }}</th>
+                <th>{{ "AIRCRAFT.JAN" | translate }}</th>
+                <th>{{ "AIRCRAFT.FEB" | translate }}</th>
+                <th>{{ "AIRCRAFT.MAR" | translate }}</th>
+                <th>{{ "AIRCRAFT.APR" | translate }}</th>
+                <th>{{ "AIRCRAFT.MAY" | translate }}</th>
+                <th>{{ "AIRCRAFT.JUN" | translate }}</th>
+                <th>{{ "AIRCRAFT.JUL" | translate }}</th>
+                <th>{{ "AIRCRAFT.AUG" | translate }}</th>
+                <th>{{ "AIRCRAFT.SEP" | translate }}</th>
+                <th>{{ "AIRCRAFT.OCT" | translate }}</th>
+                <th>{{ "AIRCRAFT.NOV" | translate }}</th>
+                <th>{{ "AIRCRAFT.DEC" | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let row of hoursDisplay"
+                [ngClass]="{ 'total-row': row.type === 'Total:' }"
+              >
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.type }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.jan | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.fev | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.mar | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.abr | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.mai | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.jun | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.jul | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.ago | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.set | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.out | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.nov | number : "1.1-1" }}
+                </td>
+                <td [style.background]="getOpaqueColor(row.color)">
+                  {{ row.dez | number : "1.1-1" }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="flightsDisplay.length === 0"
+      class="no-flights-message"
+      style="margin: 16px 0; color: #888; text-align: center"
+    >
+      <span [innerHTML]="'AIRCRAFT.NO_FLIGHTS' | translate"></span>
+    </div>
+
+    <div class="flights-list">
+      <div class="report-buttons-wrapper">
+        <div class="report-buttons">
+          <button
+            class="bg-gradient-to-r from-gray-400 to-gray-600 text-white font-bold px-5 py-2 rounded-lg flex items-center gap-2 shadow-md border border-gray-700 h-12 min-w-[180px]"
+            (click)="downloadMaintenanceReport()"
+          >
+            <span class="text-xl">📊</span>
+            Maintenance Report
+          </button>
+          <button
+            class="bg-gradient-to-r from-gray-400 to-gray-600 text-white font-bold px-5 py-2 rounded-lg flex items-center gap-2 shadow-md border border-gray-700 h-12 min-w-[180px]"
+            (click)="toFinancialReport()"
+          >
+            <span class="text-xl">📈</span>
+            Financial Report
+            <span
+              class="ml-2 bg-gray-700 bg-opacity-60 px-2 py-0.5 rounded-full font-bold text-sm border border-gray-400"
+              >{{ totalYearHours | number : "1.1-1" }} h</span
+            >
+          </button>
+        </div>
+      </div>
+      <div class="flights-header">
+        <h2 style="margin-bottom: 0">
+          {{ "AIRCRAFT.FLIGHT_LIST" | translate }}
+        </h2>
+      </div>
+      <div class="flight-list-toolbar">
+        <div #yearScroll class="year-buttons-top">
+          <button
+            *ngFor="let year of years"
+            [class.active]="year === currentYear"
+            (click)="changeYear(year)"
+          >
+            {{ year }}
+          </button>
+        </div>
+        <div class="pagination-buttons">
+          <div class="page-size-container">
+            <span class="lines-display">{{
+              "AIRCRAFT.LINES" | translate
+            }}</span>
+            <input
+              class="lines-display-input"
+              type="number"
+              min="8"
+              max="50"
+              [(ngModel)]="pageSize"
+              (ngModelChange)="setPageSize($event)"
+            />
+          </div>
+          <div class="page-jump-container">
+            <span>{{ "AIRCRAFT.GO_TO_PAGE" | translate }}</span>
+            <input
+              class="page-jump"
+              id="page-jump"
+              type="number"
+              min="1"
+              [max]="roundUp"
+              [(ngModel)]="jumpToPageValue"
+            />
+            <button class="jump-confirm" (click)="jumpToPage(jumpToPageValue)">
+              ✔
+            </button>
+            <span
+              ><button (click)="jumpToPage(jumpToPageValue)">
+                {{ roundUp }} - {{ currentPage }}
+              </button></span
+            >
+          </div>
+          <button
+            class="pagination-btn prev-btn"
+            (click)="sendPage(false)"
+            [disabled]="minPage <= 1"
+          >
+            {{ "AIRCRAFT.PREVIOUS" | translate }}
+          </button>
+          <button
+            class="pagination-btn next-btn"
+            (click)="sendPage(true)"
+            [disabled]="page === 0"
+          >
+            {{ "AIRCRAFT.NEXT" | translate }}
+          </button>
+        </div>
+      </div>
+      <table class="flights-table">
+        <thead>
+          <tr>
+            <th>{{ "AIRCRAFT.DATE" | translate }}</th>
+            <th>{{ "AIRCRAFT.ORIGIN" | translate }}</th>
+            <th>{{ "AIRCRAFT.DESTINATION" | translate }}</th>
+            <th>{{ "AIRCRAFT.AIR_TIME" | translate }}</th>
+            <th>{{ "AIRCRAFT.TOTAL_TIME" | translate }}</th>
+            <th>{{ "AIRCRAFT.RESPONSIBLE" | translate }}</th>
+            <th>{{ "AIRCRAFT.MONTH" | translate }}</th>
+            <th>{{ "AIRCRAFT.ACTIONS" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let FlightsDisplay of flightsDisplay">
+            <td>{{ FlightsDisplay.date | date : "dd/MM/yyyy" }}</td>
+            <td>{{ FlightsDisplay.origin }}</td>
+            <td>{{ FlightsDisplay.destination }}</td>
+            <td>{{ FlightsDisplay.air_time | number : "1.1-1" }}</td>
+            <td>{{ FlightsDisplay.total_time | number : "1.1-1" }}</td>
+            <td>{{ getResponsibleName(+FlightsDisplay.responsible_id) }}</td>
+            <td>{{ FlightsDisplay.date | date : "MMM" }}</td>
+            <td>
+              <button
+                class="action-btn cost"
+                [ngClass]="FlightsDisplay.has_cost ? 'has-cost' : 'no-cost'"
+                (click)="
+                  openCostModal(
+                    FlightsDisplay.id,
+                    +FlightsDisplay.responsible_id
+                  )
+                "
+              >
+                {{ "AIRCRAFT.COST" | translate }}
+              </button>
+              <button
+                class="action-btn edit"
+                (click)="openEditFlightModal(FlightsDisplay)"
+              >
+                {{ "AIRCRAFT.EDIT" | translate }}
+              </button>
+              <button
+                class="action-btn delete"
+                (click)="deleteFlight(FlightsDisplay.id)"
+              >
+                {{ "AIRCRAFT.DELETE" | translate }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <span>
+          {{
+            "AIRCRAFT.SHOWING"
+              | translate : { min: minPage, max: maxPage, total: yearTotal }
+          }}
+        </span>
+        <div class="pagination-buttons">
+          <button
+            class="pagination-btn prev-btn"
+            (click)="sendPage(false)"
+            [disabled]="minPage <= 1"
+          >
+            {{ "AIRCRAFT.PREVIOUS" | translate }}
+          </button>
+          <button
+            class="pagination-btn next-btn"
+            (click)="sendPage(true)"
+            [disabled]="page === 0"
+          >
+            {{ "AIRCRAFT.NEXT" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div #yearScroll class="year-buttons">
+      <button
+        *ngFor="let year of years"
+        [class.active]="year === currentYear"
+        (click)="changeYear(year)"
+      >
+        {{ year }}
+      </button>
+    </div>
+    <div class="export-buttons">
+      <button (click)="exportHoursSummaryCSV()">
+        {{ "AIRCRAFT.EXPORT_HOURS_CSV" | translate }}
+      </button>
+      <button (click)="exportFlightListCSV()">
+        {{ "AIRCRAFT.EXPORT_FLIGHT_CSV" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-add-flight
+  *ngIf="showAddFlight"
+  [aircraftId]="aircraft_Id ? +aircraft_Id : undefined"
+  [responsibleList]="responsibleList"
+  [flightToEdit]="flightToEdit"
+  (close)="closeAddFlightModal()"
+  (save)="saveFlight($event)"
+  (update)="updateFlight($event)"
+>
+</app-add-flight>
+
+<app-cost
+  *ngIf="showCostModal && selectedFlightId"
+  [flightId]="selectedFlightId"
+  [responsibleId]="selectedResponsibleId ?? 0"
+  [costData]="costData"
+  (close)="closeCostModal()"
+  (save)="saveCost($event)"
+></app-cost>
+
+<app-expenses
+  *ngIf="showExpensesModal"
+  [aircraftId]="aircraft_Id ? +aircraft_Id : undefined"
+  [responsibleList]="responsibleList"
+  [pilotList]="pilotList"
+  (close)="closeExpensesModal()"
+  (save)="saveExpense($event)"
+></app-expenses>

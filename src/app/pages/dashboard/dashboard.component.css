@@ -1,0 +1,212 @@
+.dashboard-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2.2rem;
+  color: #232946;
+  font-weight: 700;
+}
+
+.add-aircraft-btn {
+  background: #232946;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-aircraft-btn:hover {
+  background: #2a99fd;
+}
+
+.aircraft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.aircraft-card {
+  background: #fff;
+  border-radius: 12px;
+
+  padding: 1.5rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+  gap: 0.7rem;
+  align-items: flex-start;
+  position: relative;
+}
+
+.aircraft-card:hover{
+  box-shadow: 0 0 10px rgba(0, 180, 255, 0.8); /* Cyan */
+  /* box-shadow: 0 0 8px rgba(0, 200, 83, 0.25); */ /* Green */
+}
+
+.aircraft-card {
+  position: relative;
+  overflow: visible;
+  /* other card styles */
+}
+
+.aircraft-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;      /* Adjust size as needed */
+  height: 100%;     /* Adjust size as needed */
+  z-index: 1;
+  pointer-events: none; /* so clicks go through */
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.aircraft-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.16; /* adjust for desired fade */
+  filter: grayscale(0%);
+}
+
+.form-line {
+  display: flex;
+  flex-wrap: wrap;
+  /* position: relative; */
+  }
+
+.aircraft-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #232946;
+}
+
+.aircraft-delete {
+  font-size: 1rem;
+  position: absolute;
+  width: 36px;
+  height: 30px;
+  top: 24px;
+  right: 16px;
+  background-color: rgb(226, 224, 230);
+  border-radius: 20%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border: none;
+  cursor: pointer;
+  opacity: 1 !important;
+  z-index: 3; 
+  display: flex;              /* Enables Flexbox */
+  align-items: center;        /* Vertical centering */
+  justify-content: center;    /* Horizontal centering */
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: #ff0000;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 4px 8px;
+  position: absolute;
+  z-index: 1000 !important;
+  top: -34px;
+  right: 0;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.aircraft-delete:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.aircraft-delete:hover{
+  box-shadow: none;
+  background-color: rgb(255, 0, 0);
+}
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.aircraft-delete:hover svg {
+  animation: wiggle 0.4s ease-in-out;
+}
+
+.aircraft-model {
+  font-size: 1.1rem;
+  color: #232946;
+  opacity: 0.8;
+}
+
+.aircraft-year {
+  font-size: 1rem;
+  color: #232946;
+  opacity: 0.7;
+}
+
+
+.manage-btn {
+  margin-top: 1rem;
+  background: #fff;
+  color: #232946;
+  border: 1.5px solid #232946;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); */
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.to-aircraft{
+  font-size: 1rem;
+  position: absolute;
+  bottom: 1px;
+  right: 16px;
+}
+
+.to-aircraft:hover{
+  text-shadow: 0 0 20px #2a99fd
+}
+
+.manage-btn{
+  background: #E2E0E5;         /* Or any solid color you want */
+  opacity: 1 !important;    /* Ensure it's fully opaque */
+  position: relative;       /* Make sure it stacks above the background */
+  z-index: 3;
+}
+
+.manage-btn:hover {
+  background: #2a99fd;
+  color: #fff;
+  border-color: #2a99fd;
+  box-shadow: none;
+}

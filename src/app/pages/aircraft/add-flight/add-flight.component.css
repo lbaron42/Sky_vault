@@ -1,0 +1,408 @@
+/* General modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 100%;
+  max-height: 90vh;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #777;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 15px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  gap: 10px;
+}
+
+.cancel-btn,
+.save-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.save-btn {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #0b5ed7;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.readonly-field {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #a5b0f3;
+  color: #575555;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Custom footer and ICAO/Signature controls */
+.custom-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  gap: 10px;
+}
+
+.icao-actions {
+  display: flex;
+  align-items: stretch;
+}
+
+.icao-input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1.5px solid #d0d7e2;
+  border-radius: 8px;
+  background: #f7f9fc;
+  padding: 8px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  min-width: 180px;
+}
+
+.icao-input-group label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.icao-input-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.icao-label-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.icao-input-group input[type="text"] {
+  border: 2px solid #0d6efd;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 15px;
+  width: 100px;
+  outline: none;
+  transition: border 0.2s;
+  height: 36px;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  display: block;
+}
+
+.icao-input-group input[type="text"]:focus {
+  border: 2px solid #0b5ed7;
+  background: #e7f0fe;
+}
+
+.icao-btns {
+  /* No longer needed for side-by-side layout */
+  display: contents;
+}
+
+.circle-btn {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: #0d6efd;
+  font-size: 22px;
+}
+
+.circle-btn:hover {
+  background: #e7f0fe;
+}
+
+.flight-signature-btn {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  min-width: 180px;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.08);
+  transition: background 0.2s;
+}
+
+.flight-signature-btn mat-icon {
+  font-size: 22px;
+}
+
+.flight-signature-btn:hover {
+  background-color: #0b5ed7;
+}
+
+.icao-modal {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  min-width: 320px;
+  max-width: 90vw;
+  background: #fff;
+  border: 2px solid #1976d2;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+  padding: 0;
+  animation: fadeIn 0.2s;
+}
+
+.icao-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1976d2;
+  color: #fff;
+  padding: 12px 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.icao-modal-header .close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5em;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.icao-modal-body {
+  padding: 18px 20px 20px 20px;
+}
+
+.icao-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.icao-list-item:last-child {
+  border-bottom: none;
+}
+
+.empty-list {
+  color: #888;
+  text-align: center;
+  padding: 20px 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Aircraft delete button and tooltip styles (reused for ICAO modal) */
+.aircraft-delete {
+  font-size: 1rem;
+  position: absolute;
+  width: 36px;
+  height: 30px;
+  top: 24px;
+  right: 16px;
+  background-color: rgb(226, 224, 230);
+  border-radius: 20%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border: none;
+  cursor: pointer;
+  opacity: 1 !important;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: #ff0000;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 4px 8px;
+  position: absolute;
+  z-index: 1000 !important;
+  top: -34px;
+  right: 0;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.aircraft-delete:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.aircraft-delete:hover {
+  box-shadow: none;
+  background-color: rgb(255, 0, 0);
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.aircraft-delete:hover svg {
+  animation: wiggle 0.4s ease-in-out;
+}

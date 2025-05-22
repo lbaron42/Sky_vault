@@ -1,0 +1,194 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="modal-header">
+      <h2>{{ "EXPENSE.TITLE" | translate }}</h2>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+
+    <form (ngSubmit)="onSave()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="responsible"
+            >{{ "EXPENSE.RESPONSIBLE" | translate }} *</label
+          >
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{ "EXPENSE.RESPONSIBLE" | translate }} *</mat-label>
+            <mat-select
+              [(ngModel)]="responsibleId"
+              name="responsibleId"
+              required
+            >
+              <mat-option value="">{{
+                "EXPENSE.RESPONSIBLE" | translate
+              }}</mat-option>
+              <mat-option *ngFor="let r of responsibleList" [value]="r.id">
+                <span
+                  style="
+                    display: inline-block;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                    vertical-align: middle;
+                  "
+                  [style.background]="r.color"
+                ></span>
+                {{ r.name }} ({{
+                  "MENAGE_RESPONSIBLE." + r.role.toUpperCase() | translate
+                }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <label for="pilot">{{ "EXPENSE.PILOT" | translate }}</label>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{ "EXPENSE.PILOT" | translate }}</mat-label>
+            <mat-select [(ngModel)]="pilotId" name="pilotId">
+              <mat-option value="">{{
+                "EXPENSE.PILOT" | translate
+              }}</mat-option>
+              <!-- Add pilot options here in the future -->
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="category">{{ "EXPENSE.CATEGORY" | translate }} *</label>
+        <select
+          id="category"
+          [(ngModel)]="category"
+          name="category"
+          required
+          class="category-bordered"
+        >
+          <option value="">{{ "EXPENSE.CATEGORY" | translate }} *</option>
+          <option *ngFor="let c of categories" [value]="c.value">
+            {{ "EXPENSE.CATEGORY_LABELS." + c.value | translate }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="date">{{ "EXPENSE.DATE" | translate }} *</label>
+        <input id="date" type="date" name="date" [(ngModel)]="date" required />
+      </div>
+      <div class="form-group">
+        <label for="amount">{{ "EXPENSE.AMOUNT" | translate }} *</label>
+        <input
+          id="amount"
+          type="number"
+          name="amount"
+          [(ngModel)]="amount"
+          required
+          min="0"
+          step="0.01"
+          placeholder="{{ 'EXPENSE.AMOUNT' | translate }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="receipt_photo">{{ "EXPENSE.RECEIPT" | translate }}</label>
+        <div class="receipt-button">
+          <input
+            type="file"
+            id="receipt_photo"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            multiple
+            style="display: none"
+            #fileInput
+          />
+          <button type="button" (click)="handleUploadClick(fileInput)">
+            {{ "EXPENSE.UPLOAD" | translate }}
+          </button>
+          <button type="button" (click)="openCamera()" class="scan-btn">
+            <span>{{ "EXPENSE.SCAN" | translate }} </span>
+          </button>
+        </div>
+        <div class="image-preview-list" *ngIf="imagePreviews.length > 0">
+          <div
+            *ngFor="let img of imagePreviews; let i = index"
+            class="image-preview-item"
+            style="position: relative; display: inline-block"
+          >
+            <button
+              type="button"
+              class="remove-image-btn"
+              (click)="removeImage(i)"
+              title="Remove"
+            >
+              ×
+            </button>
+            <button
+              type="button"
+              class="image-preview-btn"
+              (click)="openImageModal(img)"
+            >
+              <img
+                [src]="
+                  img.startsWith('/receipts/')
+                    ? 'http://localhost:3000' + img
+                    : img
+                "
+                alt="Receipt Preview"
+                style="
+                  max-width: 100px;
+                  max-height: 100px;
+                  margin: 4px;
+                  border-radius: 4px;
+                  border: 1px solid #ccc;
+                "
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="notes">{{ "EXPENSE.NOTES" | translate }}</label>
+        <textarea
+          id="notes"
+          [(ngModel)]="notes"
+          name="notes"
+          rows="5"
+          style="min-height: 100px"
+        ></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="submit">{{ "EXPENSE.SAVE" | translate }}</button>
+        <button type="button" (click)="onClose()">
+          {{ "EXPENSE.CANCEL" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div class="image-modal-overlay" *ngIf="modalImage" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <img [src]="modalImage" alt="Full Receipt" />
+    <button class="close-btn" (click)="closeImageModal()">×</button>
+  </div>
+</div>
+
+<!-- Camera Modal -->
+<div class="camera-modal-overlay" *ngIf="showCameraModal">
+  <div class="camera-modal-content">
+    <video
+      id="camera-video"
+      autoplay
+      playsinline
+      style="max-width: 90vw; max-height: 60vh; border-radius: 8px"
+    ></video>
+    <div style="margin-top: 1rem; display: flex; gap: 1rem">
+      <button type="button" (click)="capturePhoto()">
+        {{ "EXPENSE.CAPTURE" | translate }}
+      </button>
+      <button type="button" (click)="closeCamera()">
+        {{ "EXPENSE.CANCEL" | translate }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,167 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+  <button
+    (click)="goBackToAircraft()"
+    class="mb-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded shadow flex items-center"
+  >
+    <svg
+      class="w-4 h-4 mr-2"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M15 19l-7-7 7-7" />
+    </svg>
+    Back to Aircraft
+  </button>
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Financial Overview</h1>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+      <div class="text-2xl font-semibold text-blue-600 mb-2">$0</div>
+      <div class="text-gray-500">Total Income</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+      <div class="text-2xl font-semibold text-red-500 mb-2">$0</div>
+      <div class="text-gray-500">Total Expenses</div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+      <div class="text-2xl font-semibold text-green-600 mb-2">$0</div>
+      <div class="text-gray-500">Net Profit</div>
+    </div>
+  </div>
+
+  <!-- Yearly Overview -->
+  <div class="mb-10">
+    <h2 class="text-xl font-semibold mb-4 text-gray-700">Yearly Overview</h2>
+    <div
+      class="bg-white rounded-lg shadow p-6 flex items-center justify-center min-h-[200px]"
+    >
+      <!-- Placeholder for yearly chart -->
+      <div
+        class="w-full h-40 bg-gradient-to-r from-blue-200 to-blue-400 rounded flex items-center justify-center text-blue-700 text-lg font-bold opacity-60"
+      >
+        [Yearly Chart Placeholder]
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly Overview -->
+  <div>
+    <h2 class="text-xl font-semibold mb-4 text-gray-700">Monthly Overview</h2>
+    <div
+      class="bg-white rounded-lg shadow p-6 flex items-center justify-center min-h-[200px]"
+    >
+      <!-- Placeholder for monthly chart -->
+      <div
+        class="w-full h-40 bg-gradient-to-r from-green-200 to-green-400 rounded flex items-center justify-center text-green-700 text-lg font-bold opacity-60"
+      >
+        [Monthly Chart Placeholder]
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Expenses Section -->
+  <div class="mt-10">
+    <h2 class="text-xl font-semibold mb-4 text-gray-700">Pending Expenses</h2>
+    <div *ngIf="!showConfirmation">
+      <form (ngSubmit)="markAsPaid()">
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded shadow">
+            <thead>
+              <tr class="bg-gray-100 text-gray-700">
+                <th class="p-2">
+                  <input
+                    type="checkbox"
+                    [checked]="allSelected"
+                    (change)="toggleAll()"
+                  />
+                </th>
+                <th class="p-2">Date</th>
+                <th class="p-2">Category</th>
+                <th class="p-2">Amount</th>
+                <th class="p-2">Pilot</th>
+                <th class="p-2">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let expense of pendingExpenses; let i = index"
+                [class.bg-yellow-50]="selectedExpenses[i]"
+              >
+                <td class="p-2 text-center">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="selectedExpenses[i]"
+                    name="selected-{{ i }}"
+                  />
+                </td>
+                <td class="p-2">{{ expense.date }}</td>
+                <td class="p-2">{{ expense.category }}</td>
+                <td class="p-2 text-red-600 font-semibold">
+                  R$ {{ expense.amount }}
+                </td>
+                <td class="p-2">{{ expense.pilot }}</td>
+                <td class="p-2">{{ expense.notes }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="flex flex-col md:flex-row items-center justify-between mt-4 gap-4"
+        >
+          <div class="text-lg font-semibold text-gray-700">
+            Total Selected:
+            <span class="text-green-600">R$ {{ selectedTotal }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="block text-gray-600 font-medium"
+              >Proof of Payment:</label
+            >
+            <input
+              type="file"
+              (change)="onFileSelected($event)"
+              class="block"
+            />
+          </div>
+          <button
+            type="submit"
+            [disabled]="!anySelected"
+            class="px-6 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700 disabled:opacity-50"
+          >
+            Mark as Paid
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Confirmation Section -->
+    <div *ngIf="showConfirmation" class="mt-6 bg-white rounded shadow p-6">
+      <h3 class="text-lg font-bold mb-4 text-gray-800">Confirm Payment</h3>
+      <ul class="mb-4">
+        <li *ngFor="let expense of selectedExpensesList">
+          <span class="font-medium">{{ expense.date }}</span> -
+          {{ expense.category }} - R$ {{ expense.amount }} - {{ expense.pilot }}
+        </li>
+      </ul>
+      <div class="mb-4 text-lg font-semibold">
+        Total: <span class="text-green-600">R$ {{ selectedTotal }}</span>
+      </div>
+      <button
+        (click)="confirmPayment()"
+        class="px-6 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+      >
+        Confirm Payment
+      </button>
+      <button
+        (click)="cancelConfirmation()"
+        class="ml-4 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

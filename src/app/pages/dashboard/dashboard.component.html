@@ -1,0 +1,102 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>{{ "DASHBOARD.TITLE" | translate }}</h1>
+    <button class="add-aircraft-btn" (click)="openAddAircraftModal()">
+      {{ "DASHBOARD.ADD_AIRCRAFT" | translate }}
+    </button>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loading" class="loading">
+    {{ "DASHBOARD.LOADING" | translate }}
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- No aircraft message -->
+  <div
+    *ngIf="!loading && !error && aircraftList.length === 0"
+    class="no-aircraft"
+  >
+    {{ "DASHBOARD.NO_AIRCRAFT" | translate }}
+  </div>
+
+  <!-- Aircraft grid -->
+  <div class="aircraft-grid" *ngIf="!loading && aircraftList.length > 0">
+    <div
+      class="aircraft-card"
+      *ngFor="let aircraft of aircraftList"
+      (click)="toAircraft(aircraft.id)"
+      style="cursor: pointer"
+    >
+      <div class="aircraft-bg">
+        <img [src]="aircraft.image_url" alt="Aircraft Image" />
+      </div>
+      <div class="form-line">
+        <div class="aircraft-title">{{ aircraft.registration }}</div>
+        <button
+          class="aircraft-delete"
+          (click)="deleteAircraft(aircraft.id); $event.stopPropagation()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-trash3"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"
+            />
+          </svg>
+          <span class="tooltip">{{
+            "DASHBOARD.TOOLTIP_DELETE" | translate
+          }}</span>
+        </button>
+      </div>
+      <div class="aircraft-model">
+        {{ aircraft.manufacturer }} {{ aircraft.model }}
+      </div>
+      <div class="aircraft-year">
+        {{ "DASHBOARD.YEAR" | translate }} {{ aircraft.year }}
+      </div>
+      <div class="form-line">
+        <button
+          class="manage-btn"
+          (click)="
+            openMenageResponsibleModal(aircraft.id); $event.stopPropagation()
+          "
+        >
+          <span class="icon">👥</span>
+          {{ "DASHBOARD.MANAGE_RESPONSIBLE" | translate }}
+        </button>
+        <span class="to-aircraft">{{
+          "DASHBOARD.TO_AIRCRAFT" | translate
+        }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-popup" *ngIf="showToast">
+  {{ toastMessage }}
+</div>
+
+<app-menage-responsible
+  *ngIf="showMenageResponsibleModal"
+  [responsibleAircraft_id]="selectedAircraftId"
+  (close)="closeMenageResponsibleModal()"
+  (save)="saveResponsible($event)"
+>
+</app-menage-responsible>
+
+<app-add-aircraft
+  *ngIf="showAddAircraftModal"
+  (close)="closeAddAircraftModal()"
+  (save)="saveAircraft($event)"
+>
+</app-add-aircraft>

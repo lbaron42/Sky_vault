@@ -1,0 +1,154 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="modal-header">
+      <h2>{{ "COST.TITLE" | translate }}</h2>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+
+    <form (ngSubmit)="onSave()">
+      <div class="form-group">
+        <label for="direct_cost">{{ "COST.DIRECT_COST" | translate }}</label>
+        <input
+          id="direct_cost"
+          type="number"
+          [(ngModel)]="direct_cost"
+          name="direct_cost"
+          required
+          min="0"
+          step="0.01"
+          [placeholder]="'COST.PLACEHOLDER_COST' | translate"
+        />
+      </div>
+      <div class="form-group">
+        <label for="hangar">{{ "COST.HANGAR" | translate }}</label>
+        <input
+          id="hangar"
+          type="number"
+          [(ngModel)]="hangar"
+          name="hangar"
+          min="0"
+          step="0.01"
+          [placeholder]="'COST.PLACEHOLDER_COST' | translate"
+        />
+      </div>
+      <div class="form-group">
+        <label for="fuel">{{ "COST.FUEL" | translate }}</label>
+        <input
+          id="fuel"
+          type="number"
+          [(ngModel)]="fuel"
+          name="fuel"
+          min="0"
+          step="0.01"
+          [placeholder]="'COST.PLACEHOLDER_COST' | translate"
+        />
+      </div>
+      <div class="form-group">
+        <label for="receipt_photo">{{ "COST.RECEIPT" | translate }}</label>
+        <div class="receipt-button">
+          <input
+            type="file"
+            id="receipt_photo"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            multiple
+            [attr.max]="3"
+            style="display: none"
+            #fileInput
+          />
+          <button type="button" (click)="handleUploadClick(fileInput)">
+            {{ "COST.UPLOAD" | translate }}
+          </button>
+          <button type="button" (click)="openCamera()" class="scan-btn">
+            <span>📷</span> {{ "COST.SCAN" | translate }}
+          </button>
+        </div>
+        <small>{{ "COST.UPLOAD_LIMIT" | translate }}</small>
+        <div class="image-preview-list" *ngIf="imagePreviews.length > 0">
+          <div
+            *ngFor="let img of imagePreviews; let i = index"
+            class="image-preview-item"
+            style="position: relative; display: inline-block"
+          >
+            <button
+              type="button"
+              class="remove-image-btn"
+              (click)="removeImage(i)"
+              title="Remove"
+            >
+              ×
+            </button>
+            <button
+              type="button"
+              class="image-preview-btn"
+              (click)="openImageModal(img)"
+            >
+              <img
+                [src]="
+                  img.startsWith('/receipts/')
+                    ? 'http://localhost:3000' + img
+                    : img
+                "
+                alt="Receipt Preview"
+                style="
+                  max-width: 100px;
+                  max-height: 100px;
+                  margin: 4px;
+                  border-radius: 4px;
+                  border: 1px solid #ccc;
+                "
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="notes">{{ "COST.NOTES" | translate }}</label>
+        <textarea
+          id="notes"
+          [(ngModel)]="notes"
+          name="notes"
+          rows="5"
+          style="min-height: 100px"
+        ></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="submit">{{ "COST.SAVE" | translate }}</button>
+        <button type="button" (click)="onClose()">
+          {{ "COST.CANCEL" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Move the image modal here, outside the modal-overlay/modal-content -->
+<div class="image-modal-overlay" *ngIf="modalImage" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <img [src]="modalImage" alt="Full Receipt" />
+    <button class="close-btn" (click)="closeImageModal()">×</button>
+  </div>
+</div>
+
+<!-- Camera Modal -->
+<div class="camera-modal-overlay" *ngIf="showCameraModal">
+  <div class="camera-modal-content">
+    <video
+      id="camera-video"
+      autoplay
+      playsinline
+      style="max-width: 90vw; max-height: 60vh; border-radius: 8px"
+    ></video>
+    <div style="margin-top: 1rem; display: flex; gap: 1rem">
+      <button type="button" (click)="capturePhoto()">
+        {{ "COST.CAPTURE" | translate }}
+      </button>
+      <button type="button" (click)="closeCamera()">
+        {{ "COST.CANCEL" | translate }}
+      </button>
+    </div>
+  </div>
+</div>

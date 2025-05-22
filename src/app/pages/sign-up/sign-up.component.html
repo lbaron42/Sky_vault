@@ -1,0 +1,109 @@
+<div class="signup-container">
+  <form class="signup-form">
+    <h2>{{ "SIGNUP.TITLE" | translate }}</h2>
+    <div class="form-group">
+      <label for="name">{{ "SIGNUP.NAME" | translate }}</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        [(ngModel)]="userData.name"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="email">{{ "SIGNUP.EMAIL" | translate }}</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="userData.email"
+        #emailInput="ngModel"
+        required
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+      />
+      <!-- Error messages -->
+      <div
+        *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)"
+        class="error-message"
+      >
+        <div *ngIf="emailInput.errors?.['required']">
+          {{ "SIGNUP.EMAIL_REQUIRED" | translate }}
+        </div>
+        <div *ngIf="emailInput.errors?.['pattern']">
+          {{ "SIGNUP.VALID_ADDRESS" | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">{{ "SIGNUP.PASSWORD" | translate }}</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="userData.password"
+        #passwordInput="ngModel"
+        required
+        minlength="6"
+        (input)="checkPasswordsMatch()"
+      />
+      <!-- Password error messages -->
+      <div
+        *ngIf="
+          passwordInput.invalid &&
+          (passwordInput.dirty || passwordInput.touched)
+        "
+        class="error-message"
+      >
+        <div *ngIf="passwordInput.errors?.['required']">
+          {{ "SIGNUP.PASSWORD_REQUIRED" | translate }}
+        </div>
+        <div *ngIf="passwordInput.errors?.['minlength']">
+          {{ "SIGNUP.PASSWORD_MINLENGTH" | translate }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">{{
+        "SIGNUP.CONFIRM_PASSWORD" | translate
+      }}</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        [(ngModel)]="userData.confirmPassword"
+        (input)="checkPasswordsMatch()"
+        required
+      />
+      <div
+        *ngIf="!passwordsMatch && userData.confirmPassword"
+        class="error-message"
+        style="color: red"
+      >
+        {{ "SIGNUP.PASSWORDS_NO_MATCH" | translate }}
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      (click)="onSubmit()"
+      [disabled]="
+        !userData.name ||
+        !userData.email ||
+        !userData.password ||
+        !userData.confirmPassword
+      "
+    >
+      {{
+        isLoading
+          ? ("SIGNUP.CREATING_ACCOUNT" | translate)
+          : ("SIGNUP.BUTTON" | translate)
+      }}
+    </button>
+    <p class="login-link">
+      {{ "SIGNUP.HAVE_ACCOUNT" | translate }}
+      <a href="/login">{{ "SIGNUP.LOGIN" | translate }}</a>
+    </p>
+  </form>
+</div>

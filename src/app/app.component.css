@@ -1,0 +1,33 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main_container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .main-content {
+    flex: 1;
+  }
+
+  footer {
+    background: #232b44;
+    color: #fff;
+    padding: 0.6rem;
+    text-align: center;
+  }

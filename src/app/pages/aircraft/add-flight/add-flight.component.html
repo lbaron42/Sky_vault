@@ -1,0 +1,292 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>
+        {{
+          flightToEdit
+            ? ("ADD_FLIGHT.TITLE_EDIT" | translate)
+            : ("ADD_FLIGHT.TITLE_ADD" | translate)
+        }}
+      </h2>
+      <button class="close-btn" (click)="onCancel()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">{{ "ADD_FLIGHT.DATE" | translate }}</label>
+          <input
+            type="date"
+            id="date"
+            [(ngModel)]="flight.date"
+            [placeholder]="'ADD_FLIGHT.DATE' | translate"
+          />
+        </div>
+        <div class="form-group">
+          <label for="responsible_id">{{
+            "ADD_FLIGHT.RESPONSIBLE" | translate
+          }}</label>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{ getSelectedResponsibleLabel() }}</mat-label>
+            <mat-select
+              [(ngModel)]="flight.responsible_id"
+              name="responsible_id"
+              required
+            >
+              <ng-container *ngIf="responsibleList.length === 0">
+                <mat-option value="" disabled>
+                  {{ "ADD_FLIGHT.ADD_RESPONSIBLE_FIRST" | translate }}
+                </mat-option>
+              </ng-container>
+              <ng-container *ngIf="responsibleList.length > 0">
+                <mat-option value="">{{
+                  "ADD_FLIGHT.SELECT_RESPONSIBLE" | translate
+                }}</mat-option>
+                <mat-option
+                  *ngFor="let responsible of responsibleList"
+                  [value]="responsible.id"
+                >
+                  <span
+                    style="
+                      display: inline-block;
+                      width: 12px;
+                      height: 12px;
+                      border-radius: 50%;
+                      margin-right: 8px;
+                      vertical-align: middle;
+                    "
+                    [style.background]="responsible.color"
+                  ></span>
+                  {{ responsible.name }} ({{
+                    "MENAGE_RESPONSIBLE." + responsible.role.toUpperCase()
+                      | translate
+                  }})
+                </mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="origin">{{ "ADD_FLIGHT.ORIGIN" | translate }}</label>
+          <input
+            list="origin-icao-list"
+            id="origin"
+            [(ngModel)]="flight.origin"
+            class="full-width"
+            maxlength="4"
+            style="text-transform: uppercase"
+            pattern="[A-Za-z]{4}"
+            title="ICAO codes are 4 letters"
+            placeholder="{{ 'ADD_FLIGHT.ORIGIN_PLACEHOLDER' | translate }}"
+            autocomplete="off"
+          />
+          <datalist id="origin-icao-list">
+            <option
+              *ngFor="let code of favoriteIcaoCodes"
+              [value]="code"
+            ></option>
+          </datalist>
+        </div>
+        <div class="form-group">
+          <label for="destination">{{
+            "ADD_FLIGHT.DESTINATION" | translate
+          }}</label>
+          <input
+            list="destination-icao-list"
+            id="destination"
+            [(ngModel)]="flight.destination"
+            class="full-width"
+            maxlength="4"
+            style="text-transform: uppercase"
+            pattern="[A-Za-z]{4}"
+            title="ICAO codes are 4 letters"
+            placeholder="{{ 'ADD_FLIGHT.DESTINATION_PLACEHOLDER' | translate }}"
+            autocomplete="off"
+          />
+          <datalist id="destination-icao-list">
+            <option
+              *ngFor="let code of favoriteIcaoCodes"
+              [value]="code"
+            ></option>
+          </datalist>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="start_up">{{ "ADD_FLIGHT.START_UP" | translate }}</label>
+          <input
+            type="time"
+            id="start_up"
+            [(ngModel)]="flight.start_up"
+            [placeholder]="'ADD_FLIGHT.START_UP_PLACEHOLDER' | translate"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="takeoff">{{ "ADD_FLIGHT.TAKEOFF" | translate }}</label>
+          <input
+            type="time"
+            id="takeoff"
+            [(ngModel)]="flight.takeoff"
+            [placeholder]="'ADD_FLIGHT.TAKEOFF_PLACEHOLDER' | translate"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="landing">{{ "ADD_FLIGHT.LANDING" | translate }}</label>
+          <input
+            type="time"
+            id="landing"
+            [(ngModel)]="flight.landing"
+            [placeholder]="'ADD_FLIGHT.LANDING_PLACEHOLDER' | translate"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="shutdown">{{ "ADD_FLIGHT.SHUTDOWN" | translate }}</label>
+          <input
+            type="time"
+            id="shutdown"
+            [(ngModel)]="flight.shutdown"
+            [placeholder]="'ADD_FLIGHT.SHUTDOWN_PLACEHOLDER' | translate"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{ "ADD_FLIGHT.AIR_TIME" | translate }}</label>
+          <div class="readonly-field">{{ getAirTime() }}</div>
+        </div>
+        <div class="form-group">
+          <label>{{ "ADD_FLIGHT.FLIGHT_TIME" | translate }}</label>
+          <div class="readonly-field">{{ getBlockTime() }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+
+      <div class="form-buttons">
+        <button class="cancel-btn" (click)="onCancel()">
+          {{ "ADD_FLIGHT.CANCEL" | translate }}
+        </button>
+        <button class="save-btn" (click)="onSave()">
+          {{
+            flightToEdit
+              ? ("ADD_FLIGHT.UPDATE" | translate)
+              : ("ADD_FLIGHT.SAVE" | translate)
+          }}
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">{{ "ADD_FLIGHT.NOTES" | translate }}</label>
+        <textarea
+          id="notes"
+          [(ngModel)]="flight.notes"
+          [placeholder]="'ADD_FLIGHT.NOTES_PLACEHOLDER' | translate"
+          rows="4"
+          class="full-width"
+        ></textarea>
+      </div>
+
+      <div class="modal-footer custom-footer">
+        <div class="icao-actions">
+          <div class="icao-input-group">
+            <div class="icao-label-input">
+              <label for="quick-icao">{{
+                "ADD_FLIGHT.FAVORITE_AIRPORTS" | translate
+              }}</label>
+            </div>
+            <div class="icao-input-row">
+              <input
+                id="quick-icao"
+                type="text"
+                maxlength="4"
+                [(ngModel)]="icaoToAdd"
+                maxlength="4"
+                style="text-transform: uppercase"
+                pattern="[A-Za-z]{4}"
+                title="ICAO codes are 4 letters"
+              />
+              <button
+                mat-icon-button
+                class="circle-btn"
+                [matTooltip]="'ADD_FLIGHT.ADD_ICAO_TOOLTIP' | translate"
+                (click)="addIcaoToFavorites(icaoToAdd)"
+                disableRipple
+              >
+                <mat-icon>add_circle</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="circle-btn"
+                [matTooltip]="'ADD_FLIGHT.LIST_ICAO_TOOLTIP' | translate"
+                (click)="showIcaoList = !showIcaoList"
+                disableRipple
+              >
+                <mat-icon>list</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button
+          class="flight-signature-btn"
+          [matTooltip]="'ADD_FLIGHT.FLIGHT_SIGNATURE_TOOLTIP' | translate"
+        >
+          <mat-icon>edit_note</mat-icon>
+          {{ "ADD_FLIGHT.FLIGHT_SIGNATURE" | translate }}
+        </button>
+      </div>
+
+      <!-- ICAO Favorite List Modal -->
+      <div class="icao-modal" *ngIf="showIcaoList">
+        <div class="icao-modal-header">
+          <span>{{ "ADD_FLIGHT.FAVORITE_AIRPORTS" | translate }}</span>
+          <button class="close-btn" (click)="showIcaoList = false">×</button>
+        </div>
+        <div class="icao-modal-body">
+          <div *ngIf="favoriteIcaoCodes.length === 0" class="empty-list">
+            {{ "ADD_FLIGHT.NO_FAVORITE_ICAO" | translate }}
+          </div>
+          <ul *ngIf="favoriteIcaoCodes.length > 0">
+            <li *ngFor="let code of favoriteIcaoCodes" class="icao-list-item">
+              <span>{{ code }}</span>
+              <button
+                class="aircraft-delete"
+                (click)="deleteIcaoCode(code)"
+                style="
+                  position: static;
+                  width: 32px;
+                  height: 28px;
+                  margin-left: 8px;
+                "
+                [matTooltip]="'DELETE' | translate"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-trash3"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"
+                  />
+                </svg>
+                <span class="tooltip">{{ "DELETE" | translate }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

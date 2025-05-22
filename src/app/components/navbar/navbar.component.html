@@ -1,0 +1,78 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <div
+      class="navbar-logo-wrapper"
+      style="position: relative; display: inline-block"
+    >
+      <a
+        [routerLink]="authService.isLoggedIn ? '/dashboard' : '/login'"
+        (click)="handleLogoClick($event)"
+      >
+        <img src="images/navbar3.png" alt="Nimbus Logo" class="navbar-logo" />
+      </a>
+    </div>
+    <div class="navbar-text-header">
+      <h1 class="navbar-app-name">Nimbus</h1>
+      <span class="navbar-register">{{ 'NAVBAR.ELEVATE' | translate }}</span>
+      <span class="navbar-trust"> {{ 'NAVBAR.TRUST' | translate }}</span>
+    </div>
+  </div>
+  <div class="user-info" *ngIf="userName">
+    <span class="user-name">{{ 'NAVBAR.WELCOME' | translate }} {{userName}}</span>
+  </div>
+  <div class="custom-dropdown" (click)="toggleDropdown()" tabindex="0" (blur)="dropdownOpen = false">
+    <img [src]="currentLangFlag" alt="Flag" width="24" style="vertical-align: middle; margin-right: 8px;">
+    <span>
+      {{ currentLangLabel }}
+    </span>
+    <span class="dropdown-arrow">&#9662;</span>
+    <div class="dropdown-list" *ngIf="dropdownOpen">
+      <div
+        class="dropdown-item"
+        *ngFor="let lang of languages"
+        (click)="selectLanguage(lang.code); $event.stopPropagation();"
+      >
+        <img [src]="lang.flag" alt="Flag" width="24" style="vertical-align: middle; margin-right: 8px;">
+        {{ lang.label }}
+      </div>
+    </div>
+  </div>
+
+  <div class="navbar-links">
+    <a *ngIf="!authService.isLoggedIn" routerLink="/login" class="navbar-link"
+      >{{ 'NAVBAR.LOGIN' | translate }}</a
+    >
+    <a *ngIf="!authService.isLoggedIn" routerLink="/signup" class="navbar-link"
+      >{{ 'NAVBAR.SIGNUP' | translate }}</a
+    >
+    <div
+      style="position: relative; display: inline-block"
+      *ngIf="authService.isLoggedIn"
+    >
+      <a
+        routerLink="/dashboard"
+        class="navbar-link"
+        [class.disabled-link]="isDashboardRoute"
+        (click)="handleDashboardClick($event)"
+        (mouseenter)="onDashboardMouseEnter()"
+        (mouseleave)="onDashboardMouseLeave()"
+        >{{ 'NAVBAR.DASHBOARD' | translate }}</a
+      >
+      <span class="navbar-tooltip" *ngIf="showDashboardTooltip"
+        >{{ 'NAVBAR.ALREADY_ON_DASHBOARD' | translate }}</span
+      >
+    </div>
+    <button
+      *ngIf="authService.isLoggedIn"
+      class="navbar-logout"
+      (click)="logout()"
+    >
+    {{ 'NAVBAR.LOGOUT' | translate }}
+    </button>
+    <div
+      class="navbar-lang-dropdown"
+      style="display: inline-block; margin-left: 1rem"
+    >
+    </div>
+  </div>
+</nav>
